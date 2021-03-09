@@ -23,9 +23,19 @@ func NewFuse(fuseTimes int, last int, perns int, slotNum int) Fuse {
 	}
 }
 
+func (f *Fuse) FuseTimes() int {
+	return f.fuseTimes
+}
+func (f *Fuse) Last() int {
+	return f.last
+}
+func (f *Fuse) Perns() int {
+	return f.perns
+}
+
 // true, 未熔断，放行
 // false, 熔断态，禁止通行
-func (f Fuse) FuseOk(key string) bool {
+func (f *Fuse) FuseOk(key string) bool {
 	fuseKey := fmt.Sprintf("is_fused:%s", key)
 	v, exist := f.m.Get(fuseKey)
 
@@ -42,7 +52,7 @@ func (f Fuse) FuseOk(key string) bool {
 
 // 某一次请求失败了，则需要调用Fail()
 // 当fail次数达到阈值时，将会使得f.FuseOK(conn ,key) 返回false，调用方借此来熔断操作
-func (f Fuse) Fail(key string) {
+func (f *Fuse) Fail(key string) {
 
 	multi := time.Now().Unix() / int64(f.perns)
 
