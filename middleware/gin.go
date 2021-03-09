@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	"fuse"
+	"github.com/fwhezfwhez/fuse"
 	"github.com/gin-gonic/gin"
 )
 

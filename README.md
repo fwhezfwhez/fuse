@@ -24,3 +24,14 @@ if e:=rpcCall(); e!=nil {
 }
 
 ```
+
+### 2. fuse for gateway
+
+**http-gin**
+
+```
+import "github.com/fwhezfwhez/fuse/middleware"
+...
+r:=gin.Default()
+r.Use(middleware.GinHTTPFuse)
+```
