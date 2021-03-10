@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/fwhezfwhez/fuse"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 var fm = fuse.NewFuse(20, 10, 5, 128)
@@ -20,7 +21,14 @@ func GinHTTPFuse(c *gin.Context) {
 		return
 	}
 
+	t0 := time.Now()
+
 	c.Next()
+
+	if time.Now().Sub(t0).Milliseconds() > 7000 {
+		fm.Fail(c.FullPath())
+		return
+	}
 
 	if c.Writer.Status() > 410 {
 		fm.Fail(c.FullPath())

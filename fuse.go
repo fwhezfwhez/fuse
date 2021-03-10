@@ -3,8 +3,17 @@ package fuse
 import (
 	"fmt"
 	"github.com/fwhezfwhez/cmap"
+	"runtime/debug"
 	"time"
 )
+
+var handleErr = func(e error) {
+	fmt.Printf("fuse err %v \n %s", debug.Stack())
+}
+
+func SetHandleErr(f func(e error)) {
+	handleErr = f
+}
 
 type Fuse struct {
 	m *cmap.MapV2
@@ -71,4 +80,10 @@ func (f *Fuse) Fail(key string) {
 	// 达到了熔断点
 	fuseKey := fmt.Sprintf("is_fused:%s", key)
 	f.m.SetEx(fuseKey, "fused", f.last)
+}
+
+// Fail with specific err, err will be handled by fuse.handleErr
+func (f *Fuse) FailWithErr(key string, e error) {
+	f.Fail(key)
+	handleErr(e)
 }
